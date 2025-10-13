@@ -27,6 +27,7 @@ Set the following environment variables:
 ```bash
 $ export SAKURACLOUD_ACCESS_TOKEN="your-access-token"
 $ export SAKURACLOUD_ACCESS_TOKEN_SECRET="your-access-token-secret"
+$ export SAKURACLOUD_SECRETS_ID="your-vault-resource-id"
 ```
 
 ## Usage
@@ -36,13 +37,13 @@ $ export SAKURACLOUD_ACCESS_TOKEN_SECRET="your-access-token-secret"
 List all secrets in a Vault:
 
 ```bash
-$ sakura-secrets list -resource-id <vault-resource-id>
+$ sakura-secrets list
 ```
 
 With zone specification:
 
 ```bash
-$ sakura-secrets list -zone is1b -resource-id <vault-resource-id>
+$ sakura-secrets list -zone is1b
 ```
 
 ### Put (create/update) a secret
@@ -50,19 +51,19 @@ $ sakura-secrets list -zone is1b -resource-id <vault-resource-id>
 Create or update a secret via pipe:
 
 ```bash
-$ echo "my-secret-value" | sakura-secrets put -resource-id <vault-resource-id> -name <secret-name>
+$ echo "my-secret-value" | sakura-secrets put -name <secret-name>
 ```
 
 Via file redirection:
 
 ```bash
-$ sakura-secrets put -resource-id <vault-resource-id> -name <secret-name> < secret.txt
+$ sakura-secrets put -name <secret-name> < secret.txt
 ```
 
 Multi-line secret with preserved formatting:
 
 ```bash
-$ cat config.json | sakura-secrets put -resource-id <vault-resource-id> -name app-config
+$ cat config.json | sakura-secrets put -name app-config
 ```
 
 ### Delete a secret
@@ -70,7 +71,7 @@ $ cat config.json | sakura-secrets put -resource-id <vault-resource-id> -name ap
 Delete a secret from a Vault:
 
 ```bash
-$ sakura-secrets delete -resource-id <vault-resource-id> -name <secret-name>
+$ sakura-secrets delete -name <secret-name>
 ```
 
 ## Command Options
@@ -78,7 +79,6 @@ $ sakura-secrets delete -resource-id <vault-resource-id> -name <secret-name>
 ### Global Options
 
 - `-zone` (optional): Zone name (default: `is1a`)
-- `-resource-id` (required): Vault resource ID
 
 ### Subcommand-specific Options
 

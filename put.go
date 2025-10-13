@@ -11,23 +11,17 @@ import (
 func RunPut(args []string) int {
 	fs := flag.NewFlagSet("put", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
-	resourceID := fs.String("resource-id", "", "Vault resource ID (required)")
 	name := fs.String("name", "", "Secret name (required)")
 
 	fs.Parse(args)
 
-	if *resourceID == "" {
-		fmt.Fprintln(os.Stderr, "Error: -resource-id is required")
-		fs.Usage()
-		return 1
-	}
 	if *name == "" {
 		fmt.Fprintln(os.Stderr, "Error: -name is required")
 		fs.Usage()
 		return 1
 	}
 
-	config, err := LoadConfig(*zone, *resourceID)
+	config, err := LoadConfig(*zone)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1

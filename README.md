@@ -14,12 +14,6 @@ A command-line tool to manage secrets in [SAKURA Cloud Secret Manager](https://c
 - SAKURA Cloud account with Secret Manager access
 - Valid API credentials (Access Token and Access Token Secret)
 
-## Installation
-
-```bash
-$ go install github.com/zinrai/sakura-secrets@latest
-```
-
 ## Configuration
 
 Set the following environment variables:

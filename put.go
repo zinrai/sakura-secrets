@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-// RunPut executes the put subcommand
-func RunPut(args []string) int {
+// runPut executes the put subcommand
+func runPut(args []string) error {
 	fs := flag.NewFlagSet("put", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
 	name := fs.String("name", "", "Secret name (required)")
@@ -16,33 +16,33 @@ func RunPut(args []string) int {
 	fs.Parse(args)
 
 	if *name == "" {
-		fmt.Fprintln(os.Stderr, "Error: -name is required")
 		fs.Usage()
-		return 1
+		return fmt.Errorf("-name is required")
 	}
 
-	config, err := LoadConfig(*zone)
+	vaultID, err := LoadVaultID()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+		return err
+	}
+
+	op, err := NewSecretOp(*zone, vaultID)
+	if err != nil {
+		return err
 	}
 
 	secretValue, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading stdin: %v\n", err)
-		return 1
+		return fmt.Errorf("failed to read stdin: %w", err)
 	}
 
 	if len(secretValue) == 0 {
-		fmt.Fprintln(os.Stderr, "Error: no input provided")
-		return 1
+		return fmt.Errorf("no input provided")
 	}
 
-	if err := CreateSecret(config, *name, string(secretValue)); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+	if err := CreateSecret(op, *name, string(secretValue)); err != nil {
+		return err
 	}
 
-	fmt.Printf("Successfully created/updated secret: %s\n", *name)
-	return 0
+	fmt.Fprintf(os.Stderr, "Successfully created/updated secret: %s\n", *name)
+	return nil
 }

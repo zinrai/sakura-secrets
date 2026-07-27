@@ -3,32 +3,34 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 )
 
-// RunList executes the list subcommand
-func RunList(args []string) int {
+// runList executes the list subcommand
+func runList(args []string) error {
 	fs := flag.NewFlagSet("list", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
 
 	fs.Parse(args)
 
-	config, err := LoadConfig(*zone)
+	vaultID, err := LoadVaultID()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+		return err
 	}
 
-	result, err := ListSecrets(config)
+	op, err := NewSecretOp(*zone, vaultID)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+		return err
 	}
 
-	fmt.Printf("Total: %d secrets\n\n", result.Total)
-	for _, secret := range result.Secrets {
+	secrets, err := ListSecrets(op)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Total: %d secrets\n\n", len(secrets))
+	for _, secret := range secrets {
 		fmt.Printf("Name: %s (Version: %d)\n", secret.Name, secret.LatestVersion)
 	}
 
-	return 0
+	return nil
 }

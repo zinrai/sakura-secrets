@@ -7,21 +7,35 @@ A command-line tool to manage secrets in [SAKURA Cloud Secret Manager](https://c
 - List all secrets in a Vault
 - Register/update secrets via stdin
 - Delete secrets from a Vault
-- Preserves whitespace and newlines in secret values
+- Sends secret values to the API exactly as read from stdin
+- Never outputs secret values (list shows only names and versions)
 
 ## Requirements
 
 - SAKURA Cloud account with Secret Manager access
-- Valid API credentials (Access Token and Access Token Secret)
+- Valid API credentials (static API keys or a service principal)
 
 ## Configuration
 
-Set the following environment variables:
+Set the Vault resource ID:
 
 ```bash
-$ export SAKURACLOUD_ACCESS_TOKEN="your-access-token"
-$ export SAKURACLOUD_ACCESS_TOKEN_SECRET="your-access-token-secret"
-$ export SAKURACLOUD_SECRETS_ID="your-vault-resource-id"
+$ export SAKURA_SECRETS_ID="your-vault-resource-id"
+```
+
+API credentials are resolved by [saclient-go](https://github.com/sacloud/saclient-go). Set either static API keys:
+
+```bash
+$ export SAKURA_ACCESS_TOKEN="your-access-token"
+$ export SAKURA_ACCESS_TOKEN_SECRET="your-access-token-secret"
+```
+
+or service principal credentials:
+
+```bash
+$ export SAKURA_SERVICE_PRINCIPAL_ID="your-service-principal-id"
+$ export SAKURA_SERVICE_PRINCIPAL_KEY_ID="your-key-id"
+$ export SAKURA_PRIVATE_KEY_PATH="/path/to/private-key.pem"
 ```
 
 ## Usage
@@ -89,6 +103,10 @@ Input is read from stdin.
 #### delete
 
 - `-name` (required): Secret name
+
+#### version
+
+Prints the version. No options.
 
 ## License
 

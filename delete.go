@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-// RunDelete executes the delete subcommand
-func RunDelete(args []string) int {
+// runDelete executes the delete subcommand
+func runDelete(args []string) error {
 	fs := flag.NewFlagSet("delete", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
 	name := fs.String("name", "", "Secret name (required)")
@@ -15,22 +15,24 @@ func RunDelete(args []string) int {
 	fs.Parse(args)
 
 	if *name == "" {
-		fmt.Fprintln(os.Stderr, "Error: -name is required")
 		fs.Usage()
-		return 1
+		return fmt.Errorf("-name is required")
 	}
 
-	config, err := LoadConfig(*zone)
+	vaultID, err := LoadVaultID()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+		return err
 	}
 
-	if err := DeleteSecret(config, *name); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		return 1
+	op, err := NewSecretOp(*zone, vaultID)
+	if err != nil {
+		return err
 	}
 
-	fmt.Printf("Successfully deleted secret: %s\n", *name)
-	return 0
+	if err := DeleteSecret(op, *name); err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully deleted secret: %s\n", *name)
+	return nil
 }

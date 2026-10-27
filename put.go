@@ -7,7 +7,6 @@ import (
 	"os"
 )
 
-// runPut executes the put subcommand
 func runPut(args []string) error {
 	fs := flag.NewFlagSet("put", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name")

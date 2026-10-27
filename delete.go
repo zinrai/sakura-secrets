@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-// runDelete executes the delete subcommand
 func runDelete(args []string) error {
 	fs := flag.NewFlagSet("delete", flag.ExitOnError)
 	zone := fs.String("zone", "is1a", "Zone name")

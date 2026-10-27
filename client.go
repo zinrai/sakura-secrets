@@ -10,9 +10,6 @@ import (
 	"github.com/sacloud/sacloud-sdk-go/common/saclient"
 )
 
-// NewSecretOp creates a Secret Manager API client bound to the specified Vault.
-// Credentials are resolved by saclient-go from environment variables,
-// supporting both static API keys and service principals.
 func NewSecretOp(zone, vaultID string) (secretmanager.SecretAPI, error) {
 	endpoint := fmt.Sprintf("SAKURA_ENDPOINTS_SECRETMANAGER=https://secure.sakura.ad.jp/cloud/zone/%s/api/cloud/1.1", zone)
 
@@ -32,7 +29,6 @@ func NewSecretOp(zone, vaultID string) (secretmanager.SecretAPI, error) {
 	return secretmanager.NewSecretOp(client, vaultID), nil
 }
 
-// ListSecrets retrieves the list of secrets from the Vault
 func ListSecrets(op secretmanager.SecretAPI) ([]v1.SecretResponse, error) {
 	var secrets []v1.SecretResponse
 	for {
@@ -50,7 +46,6 @@ func ListSecrets(op secretmanager.SecretAPI) ([]v1.SecretResponse, error) {
 	}
 }
 
-// CreateSecret registers a secret to the Vault
 func CreateSecret(op secretmanager.SecretAPI, name, value string) error {
 	_, err := op.Create(context.Background(), secretmanager.CreateSecretParams{
 		Name:  name,
@@ -59,7 +54,6 @@ func CreateSecret(op secretmanager.SecretAPI, name, value string) error {
 	return err
 }
 
-// DeleteSecret deletes a secret from the Vault
 func DeleteSecret(op secretmanager.SecretAPI, name string) error {
 	return op.Delete(context.Background(), name)
 }

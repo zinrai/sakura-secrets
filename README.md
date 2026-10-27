@@ -59,7 +59,7 @@ $ sakura-secrets list -zone is1b
 Create or update a secret via pipe:
 
 ```bash
-$ echo "my-secret-value" | sakura-secrets put -name <secret-name>
+$ printf '%s' "my-secret-value" | sakura-secrets put -name <secret-name>
 ```
 
 Via file redirection:

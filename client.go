@@ -34,7 +34,20 @@ func NewSecretOp(zone, vaultID string) (secretmanager.SecretAPI, error) {
 
 // ListSecrets retrieves the list of secrets from the Vault
 func ListSecrets(op secretmanager.SecretAPI) ([]v1.SecretResponse, error) {
-	return op.List(context.Background(), nil, nil)
+	var secrets []v1.SecretResponse
+	for {
+		from := len(secrets)
+		page, err := op.List(context.Background(), nil, &from)
+		if err != nil {
+			return nil, err
+		}
+		// Stop on an empty page, not a short one: the page size is left to
+		// the server, so a page shorter than expected is not the last.
+		if len(page) == 0 {
+			return secrets, nil
+		}
+		secrets = append(secrets, page...)
+	}
 }
 
 // CreateSecret registers a secret to the Vault

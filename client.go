@@ -33,13 +33,13 @@ func NewSecretOp(zone, vaultID string) (secretmanager.SecretAPI, error) {
 }
 
 // ListSecrets retrieves the list of secrets from the Vault
-func ListSecrets(op secretmanager.SecretAPI) ([]v1.Secret, error) {
-	return op.List(context.Background())
+func ListSecrets(op secretmanager.SecretAPI) ([]v1.SecretResponse, error) {
+	return op.List(context.Background(), nil, nil)
 }
 
 // CreateSecret registers a secret to the Vault
 func CreateSecret(op secretmanager.SecretAPI, name, value string) error {
-	_, err := op.Create(context.Background(), v1.CreateSecret{
+	_, err := op.Create(context.Background(), secretmanager.CreateSecretParams{
 		Name:  name,
 		Value: value,
 	})
@@ -48,7 +48,5 @@ func CreateSecret(op secretmanager.SecretAPI, name, value string) error {
 
 // DeleteSecret deletes a secret from the Vault
 func DeleteSecret(op secretmanager.SecretAPI, name string) error {
-	return op.Delete(context.Background(), v1.DeleteSecret{
-		Name: name,
-	})
+	return op.Delete(context.Background(), name)
 }

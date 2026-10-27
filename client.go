@@ -37,8 +37,8 @@ func ListSecrets(op secretmanager.SecretAPI) ([]v1.SecretResponse, error) {
 		if err != nil {
 			return nil, err
 		}
-		// Stop on an empty page, not a short one: the page size is left to
-		// the server, so a page shorter than expected is not the last.
+		// Not stopping on a short page: the page size is left to the server,
+		// so a short page may not be the last.
 		if len(page) == 0 {
 			return secrets, nil
 		}

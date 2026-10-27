@@ -8,7 +8,7 @@ import (
 // runList executes the list subcommand
 func runList(args []string) error {
 	fs := flag.NewFlagSet("list", flag.ExitOnError)
-	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
+	zone := fs.String("zone", "is1a", "Zone name")
 
 	fs.Parse(args)
 

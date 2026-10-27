@@ -9,7 +9,7 @@ import (
 // runDelete executes the delete subcommand
 func runDelete(args []string) error {
 	fs := flag.NewFlagSet("delete", flag.ExitOnError)
-	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
+	zone := fs.String("zone", "is1a", "Zone name")
 	name := fs.String("name", "", "Secret name (required)")
 
 	fs.Parse(args)

@@ -10,7 +10,7 @@ import (
 // runPut executes the put subcommand
 func runPut(args []string) error {
 	fs := flag.NewFlagSet("put", flag.ExitOnError)
-	zone := fs.String("zone", "is1a", "Zone name (default: is1a)")
+	zone := fs.String("zone", "is1a", "Zone name")
 	name := fs.String("name", "", "Secret name (required)")
 
 	fs.Parse(args)

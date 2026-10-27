@@ -84,7 +84,9 @@ $ sakura-secrets delete -name <secret-name>
 
 ## Command Options
 
-### Global Options
+### Common Options
+
+Given after the subcommand, like every other option.
 
 - `-zone` (optional): Zone name (default: `is1a`)
 

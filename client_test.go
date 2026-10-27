@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"slices"
 	"testing"
 
 	secretmanager "github.com/sacloud/sacloud-sdk-go/api/secretmanager"
@@ -13,9 +14,14 @@ type pagedSecretOp struct {
 	secretmanager.SecretAPI
 	secrets  []v1.SecretResponse
 	pageSize int
+	calls    int
 }
 
 func (op *pagedSecretOp) List(_ context.Context, _, from *int) ([]v1.SecretResponse, error) {
+	op.calls++
+	if op.calls > len(op.secrets)+1 {
+		return nil, fmt.Errorf("List called %d times for %d secrets", op.calls, len(op.secrets))
+	}
 	start := min(*from, len(op.secrets))
 	end := min(start+op.pageSize, len(op.secrets))
 	return op.secrets[start:end], nil
@@ -31,12 +37,7 @@ func TestListSecretsReturnsEveryPage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(got) != len(op.secrets) {
-		t.Fatalf("got %d secrets, want %d", len(got), len(op.secrets))
-	}
-	for i := range got {
-		if got[i].Name != op.secrets[i].Name {
-			t.Errorf("secret %d is %q, want %q", i, got[i].Name, op.secrets[i].Name)
-		}
+	if !slices.Equal(got, op.secrets) {
+		t.Errorf("got %v, want %v", got, op.secrets)
 	}
 }

@@ -39,7 +39,7 @@ Set the Vault resource ID:
 $ export SAKURA_SECRETS_ID="your-vault-resource-id"
 ```
 
-API credentials are resolved by [saclient-go](https://github.com/sacloud/saclient-go). Set either static API keys:
+Set either static API keys:
 
 ```bash
 $ export SAKURA_ACCESS_TOKEN="your-access-token"

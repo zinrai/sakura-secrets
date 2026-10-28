@@ -1,6 +1,6 @@
 # sakura-secrets
 
-A command-line tool to manage secrets in [SAKURA Cloud Secret Manager](https://cloud.sakura.ad.jp/products/secrets-manager/). Secret values are sent to the API exactly as read from stdin and are never output; `list` shows only names and versions.
+A command-line tool to manage secrets in [SAKURA Cloud Secret Manager](https://cloud.sakura.ad.jp/products/secrets-manager/). Secret values are sent to the API exactly as read from stdin, and Secret Manager removes leading and trailing whitespace from them. Values are never output; `list` shows only names and versions.
 
 ## Usage
 
@@ -13,7 +13,7 @@ $ sakura-secrets list
 Create or update a secret from stdin:
 
 ```bash
-$ printf '%s' "my-secret-value" | sakura-secrets put -name <secret-name>
+$ echo "my-secret-value" | sakura-secrets put -name <secret-name>
 $ sakura-secrets put -name <secret-name> < secret.txt
 ```
 
